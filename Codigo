@@ -1,0 +1,45 @@
+library(dplyr)
+library(ggplot2)
+library(gganimate)
+library(gifski)
+
+#Pregunta: ¿Cuál ha sido la mayor tasa de desempleo observada en México y en qué año (periodo 1990-2020)?
+#Datos del Fondo Monetario Internacional 
+# ¿Cuántos datos tengo?
+#¿Qué tipo de variables son?
+#¿Están en el formato correcto?
+#¿Tengo errores de captura o datos imposibles? 
+
+View(trabajorrrr)
+
+#Asigno nombres sencillos a las variables que voy a utilizar.
+tasa <- trabajorrrr$`Unemployment rate` 
+year <- trabajorrrr$Year
+
+# Construyo una gráfica: base de datos, valor del eje x son los años y del eje y es la tasa de desempleo. Asigno color a mi linea. 
+ggplot(trabajorrrr, aes(x = year, y = tasa)) + geom_line(aes(color = "tomato1"))+
+  #Asigno título y nombre de ejes 'x' y 'y'. Asigno tema. 
+  labs(title = "Tasa de desempleo, México, 1990-2020", y= "Tasa de desempleo", x="Años")+ theme_bw() +
+  #Asigno características a los títulos como número de letra, color y que se vean en negritas y el título en el centro. 
+  theme(plot.title = element_text(size = 18, face = "bold", color = "red4", hjust = 0.5),axis.title = element_text(color = "red4", face = "bold"))+
+  #Agrego 'puntos', en los que especifico tamaño y color. Le indico que coloque una etiqueta a las tasas mayores de 5.3 para remarcar que años tuvieron mayor desempleo. 
+  geom_point(color = "cyan4", size = 2) + geom_text(aes(label = ifelse(tasa > 5.3, as.character(tasa), '')), hjust = 0.5, vjust = -0.5, color = "turquoise4")+
+  # Para agregar fuente y autor. 
+  labs(caption = "Fuente: Fondo Monetario Internacional (FMI) \n Autor: Laura Gil Dávila")
+
+
+#Respuesta: La mayor tasa de desempleo observada en México ha sido de 6.23 en 1995. 
+
+
+# Para la animación de la gráfica unicamente agrego + transition_reveal 
+  ggplot(trabajorrrr, aes(x = year, y = tasa)) + geom_line(aes(color = "tomato1"))+
+  labs(title = "Tasa de desempleo, México, 1990-2020", y= "Tasa de desempleo", x="Años")+ theme_bw() +
+  theme(plot.title = element_text(size = 18, face = "bold", color = "red4", hjust = 0.5),axis.title = element_text(color = "red4", face = "bold"))+
+  geom_point(color = "cyan4", size = 2) + geom_text(aes(label = ifelse(tasa > 5.3, as.character(tasa), '')), hjust = 0.5, vjust = -0.5, color = "turquoise4")+
+    labs(caption = "Fuente: Fondo Monetario Internacional (FMI) \n Autor: Laura Gil Dávila") + transition_reveal(year)
+  
+#Guardar el gif con libreria gifski
+  save_gif("mexico.gif", delay = 2)
+
+  
+  
